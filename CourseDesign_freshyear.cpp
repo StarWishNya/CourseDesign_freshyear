@@ -147,8 +147,8 @@ void StudentManage::sort_score() {
 		}
 	}
 }
-string encrypt(StudentManage students,int key){
-	string result="";
+string encrypt(StudentManage students, int key) {
+	string result = "";
 	for (int i = 0; i < students.students.size(); i++) {
 		result += to_string(students.students[i].score);
 	}
