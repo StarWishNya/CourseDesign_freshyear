@@ -129,6 +129,10 @@
   <ItemGroup>
     <ClCompile Include="CourseDesign_freshyear.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="func.h" />
+    <ClInclude Include="student_class.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
