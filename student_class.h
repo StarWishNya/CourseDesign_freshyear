@@ -118,6 +118,8 @@ void StudentManage::statmaintain(string gpa, bool flag) {//维护统计信息
 	else {
 		statistics.f += cum;
 	}
+	statistics.sum += cum;
+	sort_score();
 }
 Student StudentManage::search(string id) {//查找学生信息
 	for (int i = 0; i < students.size(); i++) {
