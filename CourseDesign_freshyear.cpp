@@ -35,7 +35,17 @@ public:
 		this->rebuild = rebuild;
 		this->gpa = getgpa(score);
 	}
-	void add(string name, string id, uint16_t score);
+	//void add(string name, string id, uint16_t score);
+};
+class StudentManage {
+public:
+	vector <Student> students;
+	Stat statistics;
+	void add(Student);
+	void del(string id);
+	Student search(string id);
+	void sort_score();
+	void statmaintain(string gpa, bool flag);
 };
 string Student::getgpa(uint16_t score) {
 	if (score >= 93) {
@@ -63,25 +73,16 @@ string Student::getgpa(uint16_t score) {
 		return "F";
 	}
 }
-void Student::add(string name, string id, uint16_t score) {
+void addstu(string name, string id, uint16_t score, StudentManage& whole_class) {
 	string last_name = name.substr(0, name.find(" "));//名字
 	string first_name = name.substr(name.find(" ") + 1);//姓
 	bool rebuild = true;//是否重修
 	if (id[3] == '2') {//2022开头的学号不需要重修，即第四位为2
 		rebuild = false;
 	}
-	Student student(first_name, last_name, id, score, rebuild);
+	Student student(first_name, last_name, id, score, rebuild);//创建学生对象
+	whole_class.add(student);
 }
-class StudentManage {
-public:
-	vector <Student> students;
-	Stat statistics;
-	void add(Student);
-	void del(string id);
-	Student search(string id);
-	void sort_score();
-	void statmaintain(string gpa, bool flag);
-};
 void StudentManage::add(Student student) {//添加学生信息
 	students.push_back(student);
 	statmaintain(student.gpa, true);
@@ -107,21 +108,24 @@ void StudentManage::statmaintain(string gpa, bool flag) {//维护统计信息
 		else {
 			statistics.a += cum;
 		}
-	}else if (gpa[0] == 'B') {
+	}
+	else if (gpa[0] == 'B') {
 		if (gpa[1] == '+') {
 			statistics.b_plus += cum;
 		}
 		else {
 			statistics.b += cum;
 		}
-	}else if (gpa[0] == 'C') {
+	}
+	else if (gpa[0] == 'C') {
 		if (gpa[1] == '+') {
 			statistics.c_plus += cum;
 		}
 		else {
 			statistics.c += cum;
 		}
-	}else if (gpa[0] == 'D') {
+	}
+	else if (gpa[0] == 'D') {
 		statistics.d += cum;
 	}
 	else {
@@ -134,6 +138,7 @@ Student StudentManage::search(string id) {
 			return students[i];
 		}
 	}
+	return Student("#", "#", "#", 0, false);
 }
 void StudentManage::sort_score() {
 	sort(students.begin(), students.end(), [](Student a, Student b) {
@@ -169,7 +174,16 @@ string decrypt(string result, int key) {
 	}
 	return result;
 }
-int main()
-{
-    std::cout << "Hello World!\n";
+int main() {
+	StudentManage class1;
+	addstu("Tom Jerry", "20210001", 90, class1);
+	addstu("Jerry Tom", "20210002", 80, class1);
+	for (int i = 0; i < class1.students.size(); i++) {
+		cout << class1.students[i].first_name << " " << class1.students[i].last_name << " " << class1.students[i].student_id << " " << class1.students[i].score << " " << class1.students[i].gpa << " " << class1.students[i].rank << endl;
+	}
+	cout << encrypt(class1, 1) << endl;
+	cout << decrypt(encrypt(class1, 1), 1) << endl;
+	cout << class1.search("20210001").first_name << endl;
+	cout << class1.statistics.a << endl;
+	return 0;
 }
