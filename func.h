@@ -1,7 +1,16 @@
-#pragma once
+ï»¿#pragma once
 #include<vector>
+#include<map>
 #include"student_class.h"
-string encrypt(StudentManage students, int key) {
+#include"ui.h"
+map<string, StudentManage> class_map;
+void newclass(string classname) {//æ–°å»ºç­çº§
+	StudentManage new_class;//åˆ›å»ºç­çº§å¯¹è±¡
+	new_class.classname = classname;//è®¾ç½®ç­çº§åç§°
+	class_map[classname] = new_class;//å°†ç­çº§å¯¹è±¡å­˜å…¥map
+	//class_list.push_back(new_class);//å°†ç­çº§å¯¹è±¡å­˜å…¥vector
+}
+string encrypt(StudentManage students, int key) {//åŠ å¯†
 	string result = "";
 	for (int i = 0; i < students.students.size(); i++) {
 		result += to_string(students.students[i].score);
@@ -14,7 +23,7 @@ string encrypt(StudentManage students, int key) {
 	}
 	return result;
 }
-string decrypt(string result, int key) {
+string decrypt(string result, int key) {//è§£å¯†
 	for (int i = 0; i < result.size(); i++) {
 		result[i] -= key;
 		if (result[i] < '0') {
@@ -23,50 +32,49 @@ string decrypt(string result, int key) {
 	}
 	return result;
 }
-void addstu(string name, string id, uint16_t score, StudentManage& whole_class) {//Ìí¼ÓÑ§ÉúĞÅÏ¢
-	string last_name = name.substr(0, name.find(" "));//Ãû×Ö
-	string first_name = name.substr(name.find(" ") + 1);//ĞÕ
-	bool rebuild = true;//ÊÇ·ñÖØĞŞ
-	if (id[3] == '2') {//2022¿ªÍ·µÄÑ§ºÅ²»ĞèÒªÖØĞŞ£¬¼´µÚËÄÎ»Îª2
+void addstu(string name, string id, uint16_t score, StudentManage& whole_class) {//æ·»åŠ å­¦ç”Ÿä¿¡æ¯
+	string last_name = name.substr(0, name.find(" "));//åå­—
+	string first_name = name.substr(name.find(" ") + 1);//å§“
+	bool rebuild = true;//æ˜¯å¦é‡ä¿®
+	if (id[3] == '2') {//2022å¼€å¤´çš„å­¦å·ä¸éœ€è¦é‡ä¿®ï¼Œå³ç¬¬å››ä½ä¸º2
 		rebuild = false;
 	}
-	Student student(first_name, last_name, id, score, rebuild);//´´½¨Ñ§Éú¶ÔÏó
+	Student student(first_name, last_name, id, score, rebuild);//åˆ›å»ºå­¦ç”Ÿå¯¹è±¡
 	whole_class.add(student);
 }
-void printclass(StudentManage& whole_class) {//´òÓ¡°à¼¶ĞÅÏ¢
-	printf("ĞÕÃû     Ñ§ºÅ     ÊÇ·ñÖØĞŞ     GPA     ³É¼¨     ÅÅÃû\n");
+void printclass(StudentManage& whole_class) {//æ‰“å°ç­çº§ä¿¡æ¯
+	printf("å§“å     å­¦å·     æ˜¯å¦é‡ä¿®     GPA     æˆç»©     æ’å\n");
 	for (int i = 0; i < whole_class.students.size(); i++) {
-		printf("%s %s %4s %4s ", whole_class.students[i].last_name.c_str(), whole_class.students[i].first_name.c_str(), whole_class.students[i].student_id.c_str(), whole_class.students[i].rebuild ? "ÊÇ" : "·ñ");
+		printf("%s %s %4s %4s ", whole_class.students[i].last_name.c_str(), whole_class.students[i].first_name.c_str(), whole_class.students[i].student_id.c_str(), whole_class.students[i].rebuild ? "æ˜¯" : "å¦");
 		printf("%11s %8d %7d\n", whole_class.students[i].gpa.c_str(), whole_class.students[i].score, i + 1);
 	}
 }
-void printstu(string id, StudentManage whole_class) {//´òÓ¡Ñ§ÉúĞÅÏ¢
+void printstu(string id, StudentManage whole_class) {//æ‰“å°å­¦ç”Ÿä¿¡æ¯
 	Student student = whole_class.search(id);
-	printf("ĞÕÃû     Ñ§ºÅ     ÊÇ·ñÖØĞŞ     GPA     ³É¼¨     ÅÅÃû\n");
-	printf("%s %s %4s %4s ", student.last_name.c_str(), student.first_name.c_str(), student.student_id.c_str(), student.rebuild ? "ÊÇ" : "·ñ");
+	printf("å§“å     å­¦å·     æ˜¯å¦é‡ä¿®     GPA     æˆç»©     æ’å\n");
+	printf("%s %s %4s %4s ", student.last_name.c_str(), student.first_name.c_str(), student.student_id.c_str(), student.rebuild ? "æ˜¯" : "å¦");
 	printf("%11s %8d %7d\n", student.gpa.c_str(), student.score, whole_class.search(id).rank);
 }
-void delstu(string id, StudentManage& whole_class) {//É¾³ıÑ§ÉúĞÅÏ¢
+void delstu(string id, StudentManage& whole_class) {//åˆ é™¤å­¦ç”Ÿä¿¡æ¯
 	printstu(id, whole_class);
-	cout << "ÊÇ·ñÉ¾³ı¸ÃÑ§ÉúĞÅÏ¢£¿(y/n)" << endl;
+	cout << "æ˜¯å¦åˆ é™¤è¯¥å­¦ç”Ÿä¿¡æ¯ï¼Ÿ(y/n)" << endl;
 	char choice;
 	cin >> choice;
 	if (choice == 'y') {
-		cout << "ÒÑÉ¾³ı" << endl;
+		cout << "å·²åˆ é™¤" << endl;
 		whole_class.del(id);
-
 	}
 	else {
-		cout << "ÒÑÈ¡ÏûÉ¾³ı" << endl;
+		cout << "å·²å–æ¶ˆåˆ é™¤" << endl;
 	}
 }
 void printstat(StudentManage whole_class) {
-	cout << "A+ÊıÁ¿: " << whole_class.statistics.a_plus << endl;
-	cout << "AÊıÁ¿: " << whole_class.statistics.a << endl;
-	cout << "B+ÊıÁ¿: " << whole_class.statistics.b_plus << endl;
-	cout << "BÊıÁ¿: " << whole_class.statistics.b << endl;
-	cout << "C+ÊıÁ¿: " << whole_class.statistics.c_plus << endl;
-	cout << "CÊıÁ¿: " << whole_class.statistics.c << endl;
-	cout << "DÊıÁ¿: " << whole_class.statistics.d << endl;
-	cout << "FÊıÁ¿: " << whole_class.statistics.f << endl;
+	cout << "A+æ•°é‡: " << whole_class.statistics.a_plus << endl;
+	cout << "Aæ•°é‡: " << whole_class.statistics.a << endl;
+	cout << "B+æ•°é‡: " << whole_class.statistics.b_plus << endl;
+	cout << "Bæ•°é‡: " << whole_class.statistics.b << endl;
+	cout << "C+æ•°é‡: " << whole_class.statistics.c_plus << endl;
+	cout << "Cæ•°é‡: " << whole_class.statistics.c << endl;
+	cout << "Dæ•°é‡: " << whole_class.statistics.d << endl;
+	cout << "Fæ•°é‡: " << whole_class.statistics.f << endl;
 }

@@ -43,6 +43,7 @@ public:
 	Student search(string id);
 	void sort_score();
 	void statmaintain(string gpa, bool flag);
+	string classname;
 };
 string Student::getgpa(uint16_t score) {
 	if (score >= 93) {
