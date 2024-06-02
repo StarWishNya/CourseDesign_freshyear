@@ -1,50 +1,20 @@
 #pragma once
 #include<vector>
 #include<string>
+#include"Student.h"
 using namespace std;
-class Stat {//统计信息
-public:
-	uint16_t a_plus = 0;
-	uint16_t a = 0;
-	uint16_t b_plus = 0;
-	uint16_t b = 0;
-	uint16_t c_plus = 0;
-	uint16_t c = 0;
-	uint16_t d = 0;
-	uint16_t f = 0;
-	uint16_t sum = 0;
-};
-class Student {
-public:
-	string first_name;//名字
-	string last_name;//姓
-	string student_id;//学号
-	uint16_t score;//分数
-	bool rebuild = false;//是否重修
-	string getgpa(uint16_t);
-	string gpa = getgpa(score);//绩点 A+, A, B+, B, C+, C, D, F
-	uint16_t rank;//排名 成绩相同需并列
-	Student(string first_name, string last_name, string student_id, uint16_t score, bool rebuild) {
-		this->first_name = first_name;
-		this->last_name = last_name;
-		this->student_id = student_id;
-		this->score = score;
-		this->rebuild = rebuild;
-		this->gpa = getgpa(score);
-	}
-	//void add(string name, string id, uint16_t score);
-};
-class StudentManage {//学生管理
+class Student_class {
 public:
 	vector <Student> students;
 	Stat statistics;
 	void add(Student);
-	void del(string id);
+	bool del(string id);
 	Student search(string id);
 	void sort_score();
 	void statmaintain(string gpa, bool flag);
 	string classname;
 };
+
 string Student::getgpa(uint16_t score) {
 	if (score >= 93) {
 		return "A+";
@@ -71,20 +41,21 @@ string Student::getgpa(uint16_t score) {
 		return "F";
 	}
 }
-void StudentManage::add(Student student) {//添加学生信息
+void Student_class::add(Student student) {//添加学生信息
 	students.push_back(student);
 	statmaintain(student.gpa, true);
 }
-void StudentManage::del(string id) {//删除学生信息
+bool Student_class::del(string id) {//删除学生信息
 	for (int i = 0; i < students.size(); i++) {
 		if (students[i].student_id == id) {
 			statmaintain(students[i].gpa, false);
 			students.erase(students.begin() + i);
-			break;
+			return true;
 		}
 	}
+	return false;
 }
-void StudentManage::statmaintain(string gpa, bool flag) {//维护统计信息
+void Student_class::statmaintain(string gpa, bool flag) {//维护统计信息
 	int cum = 1;
 	if (flag == false) {
 		cum = -1;
@@ -122,7 +93,7 @@ void StudentManage::statmaintain(string gpa, bool flag) {//维护统计信息
 	statistics.sum += cum;
 	sort_score();
 }
-Student StudentManage::search(string id) {//查找学生信息
+Student Student_class::search(string id) {//查找学生信息
 	for (int i = 0; i < students.size(); i++) {
 		if (students[i].student_id == id) {
 			return students[i];
@@ -130,7 +101,7 @@ Student StudentManage::search(string id) {//查找学生信息
 	}
 	return Student("#", "#", "#", 0, false);
 }
-void StudentManage::sort_score() {//按成绩排序
+void Student_class::sort_score() {//按成绩排序
 	sort(students.begin(), students.end(), [](Student a, Student b) {
 		return a.score > b.score;
 		});
