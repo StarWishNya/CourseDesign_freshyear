@@ -8,11 +8,12 @@
 #include"StudentManager.h"
 using namespace std;
 int main() {
-	cout << chn_menu() << endl;
-	Classes classes{};
+	//cout << chn_menu() << endl;
 	classes.newclass("class1");
+	classes.newclass("class2");
+	classes.newclass("class3");
+	//string classname = classchoose()->classname;
 	Student_class* class1 = classes.findclass("class1");
-	//Student_class class1;
 	printstu("202100101100", *class1);
 	class1->add(addstu("张 三", "202100101100", 60));
 	printstu("202100101100", *class1);

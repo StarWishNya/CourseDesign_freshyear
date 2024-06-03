@@ -4,7 +4,10 @@
 #include<iostream>
 #include<windows.h>
 #include"student_class.h"
-using namespace std;
+#include"StudentManager.h"
+using std::cin;
+using std::cout;
+using std::endl;
 enum class Direction {//方向
 	Up,
 	Down,
@@ -43,8 +46,11 @@ void rgb_init() {
 void rgb_set(int wr, int wg, int wb) {//设置RGB
 	printf("\033[38;2;%d;%d;%dm", wr, wg, wb);	//\033[38表示前景，\033[48表示背景，三个%d表示混合的数
 }
-void sleep(int time) {
+void sleep(uint16_t time) {
 	Sleep(time);
+}
+void clearsceen() {
+	system("cls");
 }
 /*void eng_menu() {
 	system("cls");
@@ -61,8 +67,49 @@ void colorprint(string str, uint16_t r, uint16_t g, uint16_t b) {
 	cout << str;
 	rgb_set(255, 255, 255);
 }
-void classchoose() {
-
+Classes classes;
+Student_class *classchoose() {
+	rgb_init();
+	std::map <std::string, Student_class> class_map = classes.outclassmap();
+	cout << "班级列表" << endl;
+	uint16_t flag = 0;
+	uint16_t r = 255, g = 0, b = 0;
+	for (auto iter = class_map.begin(); iter != class_map.end(); iter++) {//打印班级列表
+		std::string classname = iter->first;
+		classname += "\n";
+		colorprint(classname, 255, 255, 255);
+	}
+	while (1) {//选择班级
+		Direction dir = getArrowInput();
+		if (dir == Direction::Up) {
+			flag--;
+			if (flag < 0) flag = class_map.size() - 1;
+		}
+		else if (dir == Direction::Down) {
+			flag++;
+			if (flag >= class_map.size()) flag = 0;
+		}
+		else if (dir == Direction::Enter) {
+			auto iter = class_map.begin();
+			for (int i = 0; i < flag; i++) {
+				iter++;
+			}
+			return &iter->second;
+		}
+		clearsceen();
+		uint16_t iterflag = 0;
+		for (auto iter = class_map.begin(); iter != class_map.end(); iter++) {
+			std::string classname = iter->first;
+			classname += "\n";
+			if (iterflag == flag) {
+				colorprint(classname, 255, 0, 0);
+			}
+			else {
+				colorprint(classname, 255, 255, 255);
+			}
+			iterflag++;
+		}
+	}
 }
 uint16_t chn_menu() {
 	rgb_init();
@@ -73,24 +120,25 @@ uint16_t chn_menu() {
 	colorprint("3. 查找学生\n", 255, 255, 255);
 	colorprint("4. 编辑学生\n", 255, 255, 255);
 	colorprint("5. 删除学生\n", 255, 255, 255);
-	colorprint("6. 退出\n", 255, 255, 255);
+	colorprint("6. 选择班级\n", 255, 255, 255);
+	colorprint("7. 退出\n", 255, 255, 255);
 	while (1) {
 		//获取方向键输入
 		Direction dir = getArrowInput();
 		if (dir == Direction::Up) {
 			flag--;
-			if (flag < 1) flag = 6;
+			if (flag < 1) flag = 7;
 		}
 		else if (dir == Direction::Down) {
 			flag++;
-			if (flag > 6) flag = 1;
+			if (flag > 7) flag = 1;
 		}
 		else if (dir == Direction::Enter) {
 			return flag;
 		}
-		system("cls");
+		clearsceen();
 		//设置颜色
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i <= 7; i++) {
 			if (flag == i) {
 				r = 255;
 				g = 0;
@@ -118,15 +166,13 @@ uint16_t chn_menu() {
 				colorprint("5. 删除学生\n", r, g, b);
 				break;
 			case 6:
-				colorprint("6. 退出\n", r, g, b);
+				colorprint("6. 选择班级\n", r, g, b);
+				break;
+			case 7:
+				colorprint("7. 退出\n", r, g, b);
 				break;
 			}
 		}
 	}
 	return flag;
 }
-/*void classchioce() {
-	for (int i = 0; i < class_list.assign.size(); i++) {
-		colorprint(class_list.assign[i].class_name, 255, 255, 255);
-	}
-}*/

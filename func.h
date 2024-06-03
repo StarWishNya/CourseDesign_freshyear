@@ -1,19 +1,17 @@
 ﻿#pragma once
 #include<vector>
 #include<map>
+#include<string>
 #include"student_class.h"
 #include"ui.h"
-/*map<string, Student_class> class_map;
-void newclass(string classname) {//新建班级
-	Student_class new_class;//创建班级对象
-	new_class.classname = classname;//设置班级名称
-	class_map[classname] = new_class;//将班级对象存入map
-	//class_list.push_back(new_class);//将班级对象存入vector
-}*/
+using std::cout;
+using std::endl;
+using std::cin;
+using std::string;
 string encrypt(Student_class students, int key) {//加密
 	string result = "";
 	for (int i = 0; i < students.students.size(); i++) {
-		result += to_string(students.students[i].score);
+		result += std::to_string(students.students[i].score);
 	}
 	for (int i = 0; i < result.size(); i++) {
 		result[i] += key;

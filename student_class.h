@@ -2,20 +2,19 @@
 #include<vector>
 #include<string>
 #include"Student.h"
-using namespace std;
 class Student_class {
 public:
-	vector <Student> students;
+	std::vector <Student> students;
 	Stat statistics;
 	void add(Student);
 	bool del(string id);
 	Student search(string id);
 	void sort_score();
 	void statmaintain(string gpa, bool flag);
-	string classname;
+	std::string classname;
 };
 
-string Student::getgpa(uint16_t score) {
+std::string Student::getgpa(uint16_t score) {
 	if (score >= 93) {
 		return "A+";
 	}
