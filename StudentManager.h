@@ -8,7 +8,7 @@ class Classes {
 public:
 	bool newclass(const std::string& classname);
 	Student_class* findclass(const std::string& classname);
-	std::map<std::string, Student_class> outclassmap() const;
+	const std::map<std::string, Student_class>& outclassmap() const;
 };
 Student_class* Classes::findclass(const std::string& classname) {
 	auto iter = class_map.find(classname);
@@ -25,6 +25,6 @@ bool Classes::newclass(const std::string& classname) {
 	class_map.find(classname)->second.classname = classname;
 	return true;
 }
-std::map<std::string, Student_class> Classes::outclassmap() const {
+const std::map<std::string, Student_class>& Classes::outclassmap() const {
 	return class_map;
 }
