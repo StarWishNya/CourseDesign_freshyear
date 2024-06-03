@@ -70,9 +70,9 @@ void colorprint(string str, uint16_t r, uint16_t g, uint16_t b) {
 Classes classes;
 Student_class *classchoose() {
 	rgb_init();
-	std::map <std::string, Student_class> class_map = classes.outclassmap();
+	const std::map <std::string, Student_class>& class_map = classes.outclassmap();
 	cout << "班级列表" << endl;
-	uint16_t flag = 0;
+	auto flag = class_map.begin();
 	uint16_t r = 255, g = 0, b = 0;
 	for (auto iter = class_map.begin(); iter != class_map.end(); iter++) {//打印班级列表
 		std::string classname = iter->first;
@@ -82,32 +82,29 @@ Student_class *classchoose() {
 	while (1) {//选择班级
 		Direction dir = getArrowInput();
 		if (dir == Direction::Up) {
-			flag--;
-			if (flag < 0) flag = class_map.size() - 1;
+			if (flag == class_map.begin()) {
+				flag = class_map.end()--;
+			} else {
+				flag--;
+			}
 		}
 		else if (dir == Direction::Down) {
 			flag++;
-			if (flag >= class_map.size()) flag = 0;
+			if (flag == class_map.end()) flag = class_map.begin();
 		}
 		else if (dir == Direction::Enter) {
-			auto iter = class_map.begin();
-			for (int i = 0; i < flag; i++) {
-				iter++;
-			}
-			return &iter->second;
+			return &flag->second;
 		}
 		clearsceen();
-		uint16_t iterflag = 0;
 		for (auto iter = class_map.begin(); iter != class_map.end(); iter++) {
 			std::string classname = iter->first;
 			classname += "\n";
-			if (iterflag == flag) {
+			if (iter == flag) {
 				colorprint(classname, 255, 0, 0);
 			}
 			else {
 				colorprint(classname, 255, 255, 255);
 			}
-			iterflag++;
 		}
 	}
 }
