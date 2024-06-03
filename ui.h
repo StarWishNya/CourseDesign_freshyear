@@ -68,7 +68,7 @@ void colorprint(string str, uint16_t r, uint16_t g, uint16_t b) {
 	rgb_set(255, 255, 255);
 }
 Classes classes;
-Student_class *classchoose() {
+const Student_class *classchoose() {
 	rgb_init();
 	const std::map <std::string, Student_class>& class_map = classes.outclassmap();
 	cout << "班级列表" << endl;
