@@ -3,7 +3,6 @@
 #include<map>
 #include<string>
 #include"student_class.h"
-#include"ui.h"
 using std::cout;
 using std::endl;
 using std::cin;
