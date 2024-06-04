@@ -3,6 +3,7 @@
 #include<string>
 #include"Student.h"
 class Student_class {
+    Student Err = Student("#", "#", "#", 0, false);
 public:
 	std::vector <Student> students;
 	Stat statistics;
@@ -12,6 +13,7 @@ public:
 	void sort_score();
 	void statmaintain(string gpa, bool flag);
 	std::string classname;
+	Student& _search(string id);
 };
 
 std::string Student::getgpa(uint16_t score) {
@@ -99,6 +101,14 @@ Student Student_class::search(string id) {//查找学生信息
 		}
 	}
 	return Student("#", "#", "#", 0, false);
+}
+Student& Student_class::_search(string id) {//查找学生信息
+	for (int i = 0; i < students.size(); i++) {
+		if (students[i].student_id == id) {
+			return students[i];
+		}
+	}
+	return Err;
 }
 void Student_class::sort_score() {//按成绩排序
 	sort(students.begin(), students.end(), [](Student a, Student b) {

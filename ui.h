@@ -73,10 +73,10 @@ void colorprint(string str, uint16_t r, uint16_t g, uint16_t b) {
 	cout << str;
 	rgb_set(255, 255, 255);
 }
-const Student_class *classchoose() {
+Student_class* classchoose() {
 	clearscreen();
 	rgb_init();
-	const std::map <std::string, Student_class>& class_map = classes.outclassmap();
+	std::map <std::string, Student_class>& class_map = classes.outclassmap();
 	cout << "班级列表" << endl;
 	auto flag = class_map.begin();
 	uint16_t r = 255, g = 0, b = 0;
@@ -87,14 +87,16 @@ const Student_class *classchoose() {
 	}
 	while (1) {//选择班级
 		Direction dir = getArrowInput();
-		if (dir == Direction::Up) {
+		if (dir == Direction::Up || dir == Direction::Left) {
 			if (flag == class_map.begin()) {
-				flag = class_map.end()--;
-			} else {
+				flag = class_map.end();
+				flag--;
+			}
+			else {
 				flag--;
 			}
 		}
-		else if (dir == Direction::Down) {
+		else if (dir == Direction::Down || dir == Direction::Right) {
 			flag++;
 			if (flag == class_map.end()) flag = class_map.begin();
 		}
@@ -216,26 +218,31 @@ void del_student(Student_class& classname) {
 	cout << "请输入学号" << endl;
 	std::string id;
 	cin >> id;
-	delstu(id, classname);
+	if (classname.del(id) == false) {
+		cout << "Error" << endl;
+	}
+	else {
+		delstu(id, classname);
+	}
 	paktc();
 }
 uint16_t edit_student_ui() {
 	rgb_init();
 	int flag = 1;
 	uint16_t r = 255, g = 0, b = 0;
-	colorprint("1. 修改姓氏", 255, 0, 0);
-	colorprint("2. 修改名字", 255, 255, 255);
-	colorprint("3. 修改学号", 255, 255, 255);
-	colorprint("4. 修改成绩", 255, 255, 255);
-	colorprint("5. 退出", 255, 255, 255);
+	colorprint("1. 修改姓氏\n", 255, 0, 0);
+	colorprint("2. 修改名字\n", 255, 255, 255);
+	colorprint("3. 修改学号\n", 255, 255, 255);
+	colorprint("4. 修改成绩\n", 255, 255, 255);
+	colorprint("5. 退出\n", 255, 255, 255);
 	while (1) {
 		//获取方向键输入
 		Direction dir = getArrowInput();
-		if (dir == Direction::Up) {
+		if (dir == Direction::Up || dir == Direction::Left) {
 			flag--;
 			if (flag < 1) flag = 5;
 		}
-		else if (dir == Direction::Down) {
+		else if (dir == Direction::Down || dir == Direction::Right) {
 			flag++;
 			if (flag > 5) flag = 1;
 		}
@@ -257,19 +264,19 @@ uint16_t edit_student_ui() {
 			}
 			switch (i) {
 			case 1:
-				colorprint("1. 修改姓氏", r, g, b);
+				colorprint("1. 修改姓氏\n", r, g, b);
 				break;
 			case 2:
-				colorprint("2. 修改名字", r, g, b);
+				colorprint("2. 修改名字\n", r, g, b);
 				break;
 			case 3:
-				colorprint("3. 修改学号", r, g, b);
+				colorprint("3. 修改学号\n", r, g, b);
 				break;
 			case 4:
-				colorprint("4. 修改成绩", r, g, b);
+				colorprint("4. 修改成绩\n", r, g, b);
 				break;
 			case 5:
-				colorprint("5. 退出", r, g, b);
+				colorprint("5. 退出\n", r, g, b);
 				break;
 			}
 		}
@@ -280,9 +287,10 @@ void edit_student(Student_class& classname) {
 	cout << "请输入学号" << endl;
 	std::string id;
 	cin >> id;
-	Student student = classname.search(id);
+	Student& student = classname._search(id);
 	if (student.first_name == "#" && student.last_name == "#" && student.student_id == "#") {
 		cout << "Error" << endl;
+		paktc();
 		return;
 	}
 	else {
@@ -322,20 +330,23 @@ void edit_student(Student_class& classname) {
 	case 5:
 		return;
 	}
+	paktc();
 }
 void ui_control() {
 	loadclasslist();
-	const Student_class* classmanager = classchoose();
+	Student_class* classmanager = classchoose();
+	loadstudent(*classmanager);
 	bool classmanagerflag = true;
 	while (1) {
 		if (classmanagerflag == false) {
-			const Student_class* classmanager = classchoose();
+			writestudentlist(*classmanager);
+			classmanager = classchoose();
+			loadstudent(*classmanager);
 			classmanagerflag = true;
 		}
-		loadstudent(*classmanager);
 		uint16_t choice = chn_menu();
 		switch (choice) {
-		case 1:{
+		case 1: {
 			add_student(*classmanager);
 			clearscreen();
 			break;
@@ -365,6 +376,9 @@ void ui_control() {
 			break;
 		}
 		case 7: {
+			for (auto iter = classes.outclassmap().begin(); iter != classes.outclassmap().end(); iter++) {
+				writestudentlist(iter->second);
+			}
 			return;
 		}
 		}

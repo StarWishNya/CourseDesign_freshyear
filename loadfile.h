@@ -49,10 +49,12 @@ void loadstudent(Student_class& classname) {
 	}
 	/*文件格式：
 	Studentlist:
-	1:first_name,last_name,student_id,score;
-	2:first_name,last_name,student_id,score;
+	first_name,last_name,student_id,score;
+	first_name,last_name,student_id,score;
 	end;
 	*/
+	//清空这个map
+	classname.students.clear();
 	std::string line;
 	while (getline(file, line)) {
 		if (line == "Studentlist:") {
