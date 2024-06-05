@@ -127,24 +127,25 @@ uint16_t chn_menu() {
 	colorprint("4. 编辑学生\n", 255, 255, 255);
 	colorprint("5. 删除学生\n", 255, 255, 255);
 	colorprint("6. 选择班级\n", 255, 255, 255);
-	colorprint("7. 退出\n", 255, 255, 255);
+	colorprint("7. 编/解码\n", 255, 255, 255);
+	colorprint("8. 退出\n", 255, 255, 255);
 	while (1) {
 		//获取方向键输入
 		Direction dir = getArrowInput();
 		if (dir == Direction::Up) {
 			flag--;
-			if (flag < 1) flag = 7;
+			if (flag < 1) flag = 8;
 		}
 		else if (dir == Direction::Down) {
 			flag++;
-			if (flag > 7) flag = 1;
+			if (flag > 8) flag = 1;
 		}
 		else if (dir == Direction::Enter) {
 			return flag;
 		}
 		clearscreen();
 		//设置颜色
-		for (int i = 1; i <= 7; i++) {
+		for (int i = 1; i <= 8; i++) {
 			if (flag == i) {
 				r = 255;
 				g = 0;
@@ -175,7 +176,10 @@ uint16_t chn_menu() {
 				colorprint("6. 选择班级\n", r, g, b);
 				break;
 			case 7:
-				colorprint("7. 退出\n", r, g, b);
+				colorprint("7. 编/解码\n", r, g, b);
+				break;
+			case 8:
+				colorprint("8. 退出\n", r, g, b);
 				break;
 			}
 		}
@@ -234,7 +238,8 @@ uint16_t edit_student_ui() {
 	colorprint("2. 修改名字\n", 255, 255, 255);
 	colorprint("3. 修改学号\n", 255, 255, 255);
 	colorprint("4. 修改成绩\n", 255, 255, 255);
-	colorprint("5. 退出\n", 255, 255, 255);
+	colorprint("5. 成绩加密/解密\n", 255, 255, 255);
+	colorprint("6. 退出\n", 255, 255, 255);
 	while (1) {
 		//获取方向键输入
 		Direction dir = getArrowInput();
@@ -276,7 +281,10 @@ uint16_t edit_student_ui() {
 				colorprint("4. 修改成绩\n", r, g, b);
 				break;
 			case 5:
-				colorprint("5. 退出\n", r, g, b);
+				colorprint("5. 成绩加密/解密\n", r, g, b);
+				break;
+			case 6:
+				colorprint("6. 退出\n", r, g, b);
 				break;
 			}
 		}
@@ -332,6 +340,78 @@ void edit_student(Student_class& classname) {
 	}
 	paktc();
 }
+void en_de_ui(Student_class& classname) {
+	clearscreen();
+	rgb_init();
+	int flag = 1;
+	uint16_t r = 255, g = 0, b = 0;
+	colorprint("1. 加密\n", 255, 0, 0);
+	colorprint("2. 解密\n", 255, 255, 255);
+	colorprint("3. 退出\n", 255, 255, 255);
+	while (1) {
+		//获取方向键输入
+		Direction dir = getArrowInput();
+		if (dir == Direction::Up || dir == Direction::Left) {
+			flag--;
+			if (flag < 1) flag = 3;
+		}
+		else if (dir == Direction::Down || dir == Direction::Right) {
+			flag++;
+			if (flag > 3) flag = 1;
+		}
+		else if (dir == Direction::Enter) {
+			if (flag == 1) {
+				clearscreen();
+				cout << "请输入加密密钥" << endl;
+				int key;
+				cin >> key;
+				cout << encrypt(classname, key) << endl;
+				cout << "加密成功" << endl;
+				paktc();
+			}
+			else if (flag == 2) {
+				clearscreen();
+				cout << "请输入要解密的字符串" << endl;
+				std::string result;
+				cin >> result;
+				cout << "请输入解密密钥" << endl;
+				int key;
+				cin >> key;
+				cout << decrypt(result, key) << endl;
+				cout << "解密成功" << endl;
+				paktc();
+			}
+			else {
+				return;
+			}
+		}
+		clearscreen();
+		//设置颜色
+		for (int i = 1; i <= 3; i++) {
+			if (flag == i) {
+				r = 255;
+				g = 0;
+				b = 0;
+			}
+			else {
+				r = 255;
+				g = 255;
+				b = 255;
+			}
+			switch (i) {
+			case 1:
+				colorprint("1. 加密\n", r, g, b);
+				break;
+			case 2:
+				colorprint("2. 解密\n", r, g, b);
+				break;
+			case 3:
+				colorprint("3. 退出\n", r, g, b);
+				break;
+			}
+		}
+	}
+}
 void ui_control() {
 	loadclasslist();
 	Student_class* classmanager = classchoose();
@@ -376,6 +456,11 @@ void ui_control() {
 			break;
 		}
 		case 7: {
+			en_de_ui(*classmanager);
+			clearscreen();
+			break;
+		}
+		case 8: {
 			for (auto iter = classes.outclassmap().begin(); iter != classes.outclassmap().end(); iter++) {
 				writestudentlist(iter->second);
 			}
