@@ -127,25 +127,26 @@ uint16_t chn_menu() {
 	colorprint("4. 编辑学生\n", 255, 255, 255);
 	colorprint("5. 删除学生\n", 255, 255, 255);
 	colorprint("6. 选择班级\n", 255, 255, 255);
-	colorprint("7. 编/解码\n", 255, 255, 255);
-	colorprint("8. 退出\n", 255, 255, 255);
+	colorprint("7. 增加班级\n", 255, 255, 255);
+	colorprint("8. 编/解码\n", 255, 255, 255);
+	colorprint("9. 退出\n", 255, 255, 255);
 	while (1) {
 		//获取方向键输入
 		Direction dir = getArrowInput();
 		if (dir == Direction::Up) {
 			flag--;
-			if (flag < 1) flag = 8;
+			if (flag < 1) flag = 9;
 		}
 		else if (dir == Direction::Down) {
 			flag++;
-			if (flag > 8) flag = 1;
+			if (flag > 9) flag = 1;
 		}
 		else if (dir == Direction::Enter) {
 			return flag;
 		}
 		clearscreen();
 		//设置颜色
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 9; i++) {
 			if (flag == i) {
 				r = 255;
 				g = 0;
@@ -176,10 +177,13 @@ uint16_t chn_menu() {
 				colorprint("6. 选择班级\n", r, g, b);
 				break;
 			case 7:
-				colorprint("7. 编/解码\n", r, g, b);
+				colorprint("7. 增加班级\n", r, g, b);
 				break;
 			case 8:
-				colorprint("8. 退出\n", r, g, b);
+				colorprint("8. 编/解码\n", r, g, b);
+				break;
+			case 9:
+				colorprint("9. 退出\n", r, g, b);
 				break;
 			}
 		}
@@ -412,8 +416,18 @@ void en_de_ui(Student_class& classname) {
 		}
 	}
 }
+void add_classs_ui() {
+	clearscreen();
+	cout << "请输入班级名称" << endl;
+	std::string classname;
+	cin >> classname;
+	classes.newclass(classname);
+	writeclasslist();
+	paktc();
+}
 void ui_control() {
 	loadclasslist();
+	loadallstu();
 	Student_class* classmanager = classchoose();
 	loadstudent(*classmanager);
 	bool classmanagerflag = true;
@@ -456,11 +470,16 @@ void ui_control() {
 			break;
 		}
 		case 7: {
-			en_de_ui(*classmanager);
+			add_classs_ui();
 			clearscreen();
 			break;
 		}
 		case 8: {
+			en_de_ui(*classmanager);
+			clearscreen();
+			break;
+		}
+		case 9: {
 			for (auto iter = classes.outclassmap().begin(); iter != classes.outclassmap().end(); iter++) {
 				writestudentlist(iter->second);
 			}

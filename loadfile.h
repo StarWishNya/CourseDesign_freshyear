@@ -127,3 +127,9 @@ void writestudentlist(Student_class& classname) {
 	file << "end;" << std::endl;
 	file.close();
 }
+void loadallstu() {
+	std::map<std::string, Student_class>& class_map = classes.outclassmap();
+	for (auto& iter : class_map) {
+		loadstudent(iter.second);
+	}
+}
