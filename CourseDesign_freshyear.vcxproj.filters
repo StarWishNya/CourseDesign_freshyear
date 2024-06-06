@@ -26,5 +26,17 @@
     <ClInclude Include="func.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Student.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StudentManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="loadfile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

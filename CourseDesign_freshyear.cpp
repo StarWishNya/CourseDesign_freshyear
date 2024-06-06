@@ -1,22 +1,32 @@
-﻿
-#include<algorithm>
+﻿#include<algorithm>
 #include<cmath>
 #include<iostream>
 #include<string>
 #include<vector>
 #include"student_class.h"
-#include"func.h"
-using namespace std;
+#include"ui.h"
+#include"StudentManager.h"
+void test() {
+	std::cout << chn_menu() << endl;
+	classes.newclass("class1");
+	classes.newclass("class2");
+	classes.newclass("class3");
+	std::string classname = classchoose()->classname;
+	Student_class* class1 = classes.findclass("class1");
+	printstu("202100101100", *class1);
+	class1->add(addstu("张 三", "202100101100", 60));
+	printstu("202100101100", *class1);
+	class1->add(addstu("李 四", "202200101101", 85));
+	printclass(*class1);
+	printstat(*class1);
+	delstu("202100101100", *class1);
+	printclass(*class1);
+	std::cout << encrypt(*class1, 1) << endl;
+	std::cout << decrypt(encrypt(*class1, 1), 1) << endl;
+	return;
+}
 int main() {
-	StudentManage class1;
-	addstu("Tom Jerry", "20210001", 90, class1);
-	addstu("Jerry Tom", "20210002", 80, class1);
-	for (int i = 0; i < class1.students.size(); i++) {
-		cout << class1.students[i].first_name << " " << class1.students[i].last_name << " " << class1.students[i].student_id << " " << class1.students[i].score << " " << class1.students[i].gpa << " " << class1.students[i].rank << endl;
-	}
-	cout << encrypt(class1, 1) << endl;
-	cout << decrypt(encrypt(class1, 1), 1) << endl;
-	cout << class1.search("20210001").first_name << endl;
-	cout << class1.statistics.a << endl;
+	//test();
+	ui_control();
 	return 0;
 }

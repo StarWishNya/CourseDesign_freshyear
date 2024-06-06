@@ -131,7 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="func.h" />
+    <ClInclude Include="loadfile.h" />
+    <ClInclude Include="Student.h" />
+    <ClInclude Include="StudentManager.h" />
     <ClInclude Include="student_class.h" />
+    <ClInclude Include="ui.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
